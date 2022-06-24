@@ -1,0 +1,83 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           jwtfuzz
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/montycarlo/jwtfuzz#readme>
+homepage:       https://github.com/montycarlo/jwtfuzz#readme
+bug-reports:    https://github.com/montycarlo/jwtfuzz/issues
+author:         Joshua Brown
+maintainer:     josh@ropware.com
+copyright:      2022 Joshua Brown
+license:        MIT
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/montycarlo/jwtfuzz
+
+library
+  exposed-modules:
+      Cmd.Fuzz
+      Lib
+      Model.Args
+  other-modules:
+      Paths_jwtfuzz
+  hs-source-dirs:
+      src
+  default-extensions:
+      FlexibleContexts
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , cryptonite
+    , extra
+    , text
+  default-language: Haskell2010
+
+executable jwtfuzz
+  main-is: Main.hs
+  other-modules:
+      Paths_jwtfuzz
+  hs-source-dirs:
+      app
+  default-extensions:
+      FlexibleContexts
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -static -optl-pthread -optl-static
+  cc-options: -static
+  extra-lib-dirs:
+      ./.system-work/lib
+  ld-options: -static -pthread
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , cryptonite
+    , extra
+    , jwtfuzz
+    , text
+  default-language: Haskell2010
+
+test-suite jwtfuzz-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_jwtfuzz
+  hs-source-dirs:
+      test
+  default-extensions:
+      FlexibleContexts
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , cryptonite
+    , extra
+    , jwtfuzz
+    , text
+  default-language: Haskell2010

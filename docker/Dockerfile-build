@@ -1,0 +1,5 @@
+FROM debian:9
+
+RUN apt-get update && apt-get install -y curl make gcc-multilib libc-dev build-essential libtinfo-dev
+RUN curl -sSkL https://get.haskellstack.org/ | sh
+

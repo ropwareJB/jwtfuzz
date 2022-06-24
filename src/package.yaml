@@ -1,0 +1,61 @@
+name:                jwtfuzz
+version:             0.1.0.0
+github:              "montycarlo/jwtfuzz"
+license:             MIT
+author:              "Joshua Brown"
+maintainer:          "josh@ropware.com"
+copyright:           "2022 Joshua Brown"
+
+extra-source-files: []
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/montycarlo/jwtfuzz#readme>
+
+default-extensions:
+  FlexibleContexts
+
+dependencies:
+- base >= 4.7 && < 5
+- bytestring
+- aeson
+- text
+- extra
+- cryptonite
+
+library:
+  source-dirs: src
+
+executables:
+  jwtfuzz:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -Wall
+    - -static
+    - -optl-pthread
+    - -optl-static
+    cc-options: -static
+    ld-options: -static -pthread
+    extra-lib-dirs: ./.system-work/lib
+    dependencies:
+    - jwtfuzz
+
+tests:
+  jwtfuzz-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - jwtfuzz
