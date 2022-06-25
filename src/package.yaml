@@ -29,6 +29,7 @@ dependencies:
 - extra
 - cryptonite
 - utf8-string
+- base64
 
 library:
   source-dirs: src
