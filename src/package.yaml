@@ -22,11 +22,13 @@ default-extensions:
 
 dependencies:
 - base >= 4.7 && < 5
+- cmdargs
 - bytestring
 - aeson
 - text
 - extra
 - cryptonite
+- utf8-string
 
 library:
   source-dirs: src

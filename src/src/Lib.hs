@@ -10,5 +10,5 @@ process :: Args -> IO ()
 process args = do
   case args of
     ArgsDefault{} ->
-      Cmd.Arm.run args
+      Cmd.Fuzz.run args
 

@@ -34,9 +34,11 @@ library
       aeson
     , base >=4.7 && <5
     , bytestring
+    , cmdargs
     , cryptonite
     , extra
     , text
+    , utf8-string
   default-language: Haskell2010
 
 executable jwtfuzz
@@ -56,10 +58,12 @@ executable jwtfuzz
       aeson
     , base >=4.7 && <5
     , bytestring
+    , cmdargs
     , cryptonite
     , extra
     , jwtfuzz
     , text
+    , utf8-string
   default-language: Haskell2010
 
 test-suite jwtfuzz-test
@@ -76,8 +80,10 @@ test-suite jwtfuzz-test
       aeson
     , base >=4.7 && <5
     , bytestring
+    , cmdargs
     , cryptonite
     , extra
     , jwtfuzz
     , text
+    , utf8-string
   default-language: Haskell2010
