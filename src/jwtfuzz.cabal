@@ -24,6 +24,7 @@ library
       Cmd.Fuzz
       Lib
       Model.Args
+      Model.Jwt
   other-modules:
       Paths_jwtfuzz
   hs-source-dirs:

@@ -2,52 +2,98 @@
 module Cmd.Fuzz
   (run) where
 
-import           Data.Bifunctor
-import           Data.Aeson
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
-import           Data.Text (Text)
-import qualified Data.ByteString as B
-import qualified Data.ByteString.Lazy as BSL
+import qualified Data.Aeson.KeyMap as KeyMap
+import qualified Data.ByteString as BS
 import qualified Data.ByteString.UTF8 as BS.UTF8
-import qualified Data.ByteString.Base64.URL as B64
-import           Data.ByteString (ByteString)
-import Model.Args
+import           Model.Jwt
+import           Model.Args
+import           Text.Printf
 
-run :: Args -> IO()
+run :: Args -> IO ()
 run args = do
   l <- getLine
-  putStrLn . show . parseJwt $ BS.UTF8.fromString l
 
-data Jwt =
-  Jwt
-    { head :: Object
-    , body :: Object
-    , tail :: ByteString
-    }
-  deriving (Show)
+  case parseJwt $ BS.UTF8.fromString l of
+    Left e ->
+      printf "%s\n" e
+    Right jwt ->
+      mapM_ (putStrLn . show) $ concatMap (\fn -> fn jwt) attacks
 
-parseJwt :: ByteString -> Either Text Jwt
-parseJwt s =
-  case B.split (fromIntegral $ fromEnum '.') s of
-    [head64,body64,tail64] -> do
-      head_bs <- parseB64 head64
-      body_bs <- parseB64 body64
-      tail_bs <- parseB64 tail64
+attacks :: [(Jwt -> [Jwt])]
+attacks =
+  [ atk_algoNone
+  , atk_algoSwap
+  , atk_nullInj
+  , atk_psychicSig
+  , atk_iat
+  , atk_notBefore
+  , atk_exp
+  , atk_removeAlg
+  , atk_removeType
+  , atk_removeSig
+  , atk_emptyHeader
+  , atk_emptyPayload
+  ]
 
-      head <- bimap T.pack id $ (eitherDecode (BSL.fromStrict head_bs) :: Either String Object)
-      body <- bimap T.pack id $ (eitherDecode (BSL.fromStrict body_bs) :: Either String Object)
+atk_algoNone :: Jwt -> [Jwt]
+atk_algoNone jwt =
+  -- TODO
+  -- [ Jwt { tail = BS.empty } ]
+  []
 
-      Right $ Jwt head body tail_bs
-    _ ->
-      Left "Supplied String not conforming to <head>.<body>.<tail>"
+atk_algoSwap :: Jwt -> [Jwt]
+atk_algoSwap jwt =
+  -- TODO
+  []
 
-parseB64 :: ByteString -> Either Text ByteString
-parseB64 s =
-  case B64.isBase64Url s of
-    False ->
-      Left "Provided ByteString is not a valid Base64 str"
-    True ->
-      B64.decodeBase64 s
+atk_nullInj :: Jwt -> [Jwt]
+atk_nullInj jwt =
+  -- TODO
+  []
+
+atk_psychicSig :: Jwt -> [Jwt]
+atk_psychicSig jwt =
+  -- TODO: Psychic Signatures
+  -- https://github.com/DataDog/security-labs-pocs/tree/main/proof-of-concept-exploits/jwt-null-signature-vulnerable-app
+  []
+
+-- IssuedAt
+atk_iat :: Jwt -> [Jwt]
+atk_iat jwt =
+  -- TODO
+  []
+
+-- NotBefore nbf
+atk_notBefore :: Jwt -> [Jwt]
+atk_notBefore jwt =
+  -- TODO
+  []
+
+-- Expiry
+atk_exp :: Jwt -> [Jwt]
+atk_exp jwt =
+  -- TODO
+  []
 
 
+atk_removeAlg :: Jwt -> [Jwt]
+atk_removeAlg jwt =
+  -- TODO
+  []
+
+atk_removeType :: Jwt -> [Jwt]
+atk_removeType jwt =
+  -- TODO
+  []
+
+atk_removeSig :: Jwt -> [Jwt]
+atk_removeSig jwt =
+  [ jwt { jwtTail = BS.empty } ]
+
+atk_emptyHeader :: Jwt -> [Jwt]
+atk_emptyHeader jwt =
+  [ jwt { jwtHead = KeyMap.empty } ]
+
+atk_emptyPayload :: Jwt -> [Jwt]
+atk_emptyPayload jwt =
+  [ jwt { jwtBody = KeyMap.empty } ]

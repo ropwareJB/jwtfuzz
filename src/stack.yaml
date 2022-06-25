@@ -1,6 +1,6 @@
 packages:
 - .
-resolver: lts-16.14
+resolver: lts-19.13
 
 extra-deps:
   []
