@@ -2,6 +2,7 @@
 module Model.Jwt
   ( Jwt(..)
   , parseJwt
+  , toString
   ) where
 
 import           Data.Aeson
@@ -10,10 +11,12 @@ import qualified Data.ByteString as B
 import qualified Data.ByteString.UTF8 as BS.UTF8
 import qualified Data.ByteString.Base64.URL as B64
 import qualified Data.ByteString.Lazy as BSL
+import qualified Data.ByteString.Lazy.UTF8 as BSL.UTF8
 import           Data.ByteString (ByteString)
 import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import           Text.Printf
 
 data Jwt =
   Jwt
@@ -46,3 +49,9 @@ parseB64 s =
     True ->
       B64.decodeBase64 s
 
+toString :: Jwt -> String
+toString jwt =
+  printf "%s.%s.%s"
+    (B64.encodeBase64 . BSL.toStrict . encode $ jwtHead jwt)
+    (B64.encodeBase64 . BSL.toStrict . encode $ jwtBody jwt)
+    (B64.encodeBase64 $ jwtTail jwt)

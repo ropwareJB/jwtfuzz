@@ -2,10 +2,11 @@
 module Cmd.Fuzz
   (run) where
 
+import           Data.Aeson
 import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.UTF8 as BS.UTF8
-import           Model.Jwt
+import           Model.Jwt as Jwt
 import           Model.Args
 import           Text.Printf
 
@@ -17,7 +18,7 @@ run args = do
     Left e ->
       printf "%s\n" e
     Right jwt ->
-      mapM_ (putStrLn . show) $ concatMap (\fn -> fn jwt) attacks
+      mapM_ (printf "%s\n" . Jwt.toString) $ concatMap (\fn -> fn jwt) attacks
 
 attacks :: [(Jwt -> [Jwt])]
 attacks =
@@ -97,3 +98,4 @@ atk_emptyHeader jwt =
 atk_emptyPayload :: Jwt -> [Jwt]
 atk_emptyPayload jwt =
   [ jwt { jwtBody = KeyMap.empty } ]
+
