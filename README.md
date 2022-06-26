@@ -4,11 +4,13 @@
 A Library for fuzzing & attacking JSON Web Tokens (JWTs) for use in Penetration Testing and security auditing. Bindings for other languages included.
 
 ### TODO
-- Python interface
-- Go Interface
+- Compile to shared object
+- Python bindings
+- Go bindings
 - Release on Hackage/Stackage
 - Release to PyPy
 - Package as Archlinux AUR bin
+- Burp Extension?
 - Write to File
 - Take in list of payloads to insert
 - Sign tokens with key
