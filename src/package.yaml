@@ -52,6 +52,29 @@ executables:
     dependencies:
     - jwtfuzz
 
+  jwtfuzz.so:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+      # - -threaded
+      #- -Wall
+      # - -static
+      # - -optl-pthread
+      # - -optl-static
+    - -dynamic
+    - -shared
+    - -fPIC
+      #- -o libjwtfuzz.so
+    - -L/usr/lib/ghc-9.0.2/rts
+    - -lHSrts-ghc9.0.2
+    c-sources: ./../so/entry.c
+    cc-options:
+    - -static
+      #ld-options: -static -pthread
+    extra-lib-dirs: ./.system-work/lib
+    dependencies:
+    - jwtfuzz
+
 tests:
   jwtfuzz-test:
     main:                Spec.hs
