@@ -52,6 +52,7 @@ executables:
     dependencies:
     - jwtfuzz
 
+foreign-libraries:
   jwtfuzz.so:
     main:                Main.hs
     source-dirs:         app

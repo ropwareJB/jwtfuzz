@@ -5,6 +5,9 @@ A Library for fuzzing & attacking JSON Web Tokens (JWTs) for use in Penetration 
 
 ### TODO
 - Compile to shared object
+Compiling to shared obj is working manually, however not normally supported by stack.
+Requires a patch to hpack to support.
+https://github.com/sol/hpack/issues/258
 - Python bindings
 - Go bindings
 - Release on Hackage/Stackage
@@ -15,6 +18,7 @@ A Library for fuzzing & attacking JSON Web Tokens (JWTs) for use in Penetration 
 - Take in list of payloads to insert
 - Sign tokens with key
 - Psychic Signatures
+
 
 ### Inspiration
 
