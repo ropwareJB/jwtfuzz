@@ -35,7 +35,7 @@ library:
   source-dirs: src
 
 executables:
-  jwtfuzz:
+  jwtfuzz-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -52,29 +52,57 @@ executables:
     dependencies:
     - jwtfuzz
 
-foreign-libraries:
-  jwtfuzz.so:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-      # - -threaded
-      #- -Wall
-      # - -static
-      # - -optl-pthread
-      # - -optl-static
-    - -dynamic
-    - -shared
-    - -fPIC
-      #- -o libjwtfuzz.so
-    - -L/usr/lib/ghc-9.0.2/rts
-    - -lHSrts-ghc9.0.2
-    c-sources: ./../so/entry.c
-    cc-options:
-    - -static
-      #ld-options: -static -pthread
-    extra-lib-dirs: ./.system-work/lib
-    dependencies:
-    - jwtfuzz
+verbatim: |
+  foreign-library jwtfuzz
+    type: native-shared
+    lib-version-info: 6:3:2
+
+    other-modules:
+        Paths_jwtfuzz
+    hs-source-dirs:
+        src
+    default-extensions:
+        FlexibleContexts
+    -- ghc-options: -dynamic -shared -fPIC -L/usr/lib/ghc-9.0.2/rts -lHSrts-ghc9.0.2
+    -- cc-options: -static
+    c-sources:
+        ./c/entry.c
+    build-depends:
+        aeson
+      , base >=4.7 && <5
+      , base64
+      , bytestring
+      , cmdargs
+      , cryptonite
+      , extra
+      , jwtfuzz
+      , text
+      , utf8-string
+    default-language: Haskell2010
+
+# foreign-libraries:
+#   jwtfuzz.so:
+#     main:                Main.hs
+#     source-dirs:         app
+#     ghc-options:
+#       # - -threaded
+#       #- -Wall
+#       # - -static
+#       # - -optl-pthread
+#       # - -optl-static
+#     - -dynamic
+#     - -shared
+#     - -fPIC
+#       #- -o libjwtfuzz.so
+#     - -L/usr/lib/ghc-9.0.2/rts
+#     - -lHSrts-ghc9.0.2
+#     c-sources: ./../so/entry.c
+#     cc-options:
+#     - -static
+#       #ld-options: -static -pthread
+#     extra-lib-dirs: ./.system-work/lib
+#     dependencies:
+#     - jwtfuzz
 
 tests:
   jwtfuzz-test:
