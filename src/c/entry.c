@@ -8,7 +8,7 @@ HsBool jwtfuzz_init(void){
   char **pargv = argv;
 
   // Initialize Haskell runtime
-  hs_init(&argc, &pargv);
+  hs_init_with_rtsopts(&argc, &pargv);
 
   // do any other initialization here and
   // return false if there was a problem

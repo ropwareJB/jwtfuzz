@@ -45,7 +45,6 @@ library
 
 foreign-library jwtfuzz
   type: native-shared
-  lib-version-info: 6:3:2
   other-modules:
       Paths_jwtfuzz
   hs-source-dirs:
