@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.35.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -46,15 +46,12 @@ library
 foreign-library jwtfuzz
   type: native-shared
   lib-version-info: 6:3:2
-
   other-modules:
       Paths_jwtfuzz
   hs-source-dirs:
       src
   default-extensions:
       FlexibleContexts
-  -- ghc-options: -dynamic -shared -fPIC -L/usr/lib/ghc-9.0.2/rts -lHSrts-ghc9.0.2
-  -- cc-options: -static
   c-sources:
       ./c/entry.c
   build-depends:
@@ -70,7 +67,7 @@ foreign-library jwtfuzz
     , utf8-string
   default-language: Haskell2010
 
-executable jwtfuzz
+executable jwtfuzz-exe
   main-is: Main.hs
   other-modules:
       Paths_jwtfuzz

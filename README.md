@@ -3,6 +3,15 @@
 
 A Library for fuzzing & attacking JSON Web Tokens (JWTs) for use in Penetration Testing and security auditing. Bindings for other languages included.
 
+## Compilation
+
+Requires forked hpack (PR open to hpack):
+https://github.com/sol/hpack/pull/518
+
+```
+make so
+```
+
 ### TODO
 - Compile to shared object
 Compiling to shared obj is working manually, however not normally supported by stack.
