@@ -10,15 +10,14 @@ import           Model.Jwt as Jwt
 import           Model.Args
 import           Text.Printf
 
-run :: Args -> IO ()
-run args = do
-  l <- getLine
-
+run :: Args -> String -> IO [Jwt]
+run args l = do
   case parseJwt $ BS.UTF8.fromString l of
-    Left e ->
+    Left e -> do
       printf "%s\n" e
+      return []
     Right jwt ->
-      mapM_ (printf "%s\n" . Jwt.toString) $ concatMap (\fn -> fn jwt) attacks
+      return $ concatMap (\fn -> fn jwt) attacks
 
 attacks :: [(Jwt -> [Jwt])]
 attacks =

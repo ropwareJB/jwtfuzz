@@ -3,7 +3,7 @@ HS_LIBDIR := $(shell cd src && stack ghc -- --print-libdir)
 BIN_PATH := $(shell cd src && stack path --dist-dir --allow-different-user)
 BIN_PATH_ABS := $(shell pwd)/src/${BIN_PATH}
 PATH_STACK_PROGRAMS := $(shell cd src && stack path --programs)
-BIN := jwtfuzz
+BIN := jwtfuzz-exe
 BUILD_CONTAINER := ${BIN}-gcp-builder
 
 bin: FORCE
