@@ -11,7 +11,7 @@ import           Model.Args
 import           Model.Jwt as Jwt
 import           Text.Printf
 
-foreign export ccall fuzzJwt :: String -> IO()
+foreign export ccall fuzzJwt_c :: CString -> IO()
 
 process :: Args -> IO ()
 process args = do
@@ -19,9 +19,15 @@ process args = do
     ArgsDefault{} -> do
       l <- getLine
       jwts <- Cmd.Fuzz.run args l
-      mapM_ (printf "%s\n" . Jwt.toString) $ jwts
+      printJwts jwts
+
+fuzzJwt_c :: CString -> IO()
+fuzzJwt_c jwt_cstr = peekCString jwt_cstr >>= fuzzJwt
 
 fuzzJwt :: String -> IO ()
 fuzzJwt jwt = do
   jwts <- Cmd.Fuzz.run (ArgsDefault{}) jwt
-  mapM_ (printf "%s\n" . Jwt.toString) $ jwts
+  printJwts jwts
+
+printJwts :: [Jwt] -> IO()
+printJwts jwts = mapM_ (printf "%s\n" . Jwt.toString) $ jwts
