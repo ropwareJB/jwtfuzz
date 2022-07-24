@@ -8,12 +8,12 @@ A Library for fuzzing & attacking JSON Web Tokens (JWTs) for use in Penetration 
 Requires forked hpack (PR open to hpack):
 https://github.com/sol/hpack/pull/518
 
-### Binary
+#### Binary
 ```
 make bin
 ```
 
-### Shared Library
+#### Shared Library
 
 ```
 make so

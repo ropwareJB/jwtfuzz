@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Lib
     ( process
+    , fuzzJwt_c
     ) where
 
 import           Foreign.C.String
@@ -11,7 +12,7 @@ import           Model.Args
 import           Model.Jwt as Jwt
 import           Text.Printf
 
-foreign export ccall fuzzJwt_c :: CString -> IO()
+foreign export ccall "fuzzJwt" fuzzJwt_c :: CString -> IO()
 
 process :: Args -> IO ()
 process args = do
