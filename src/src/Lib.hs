@@ -12,6 +12,7 @@ import           Model.Args
 import           Model.Jwt as Jwt
 import           Text.Printf
 
+-- TODO: Return list of CString for function -> Linked list?
 foreign export ccall "fuzzJwt" fuzzJwt_c :: CString -> IO()
 
 process :: Args -> IO ()
