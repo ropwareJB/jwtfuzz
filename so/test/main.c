@@ -14,6 +14,9 @@ int main(){
 	int i;
 	for(i=0, jwt=jwts[i]; jwt != NULL; i++, jwt=jwts[i]){
 	 printf("%s\n", jwt);
+
+	 // After some processing, we're done so lets free the memory.
+	 free(jwt);
 	}
 
 	jwtfuzz_end();
