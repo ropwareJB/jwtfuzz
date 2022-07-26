@@ -18,7 +18,7 @@ copy: FORCE
 
 so: FORCE
 	# Clean env
-	rm ${BIN_PATH_ABS}/libHSjwtfuzz.so
+	rm ${BIN_PATH_ABS}/libHSjwtfuzz.so 2>/dev/null || true
 
 	cd src && \
 		stack build --allow-different-user
