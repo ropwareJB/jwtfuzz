@@ -20,8 +20,15 @@ The fuzzing functions are also provided as a Unix Shared Library (.so) and Windo
 
 You can call the library from C or any language in which you can utilize dynamic-library or a Foreign Function Interface (FFI). An example may be found in the `./so/test` directory, which demonstrates usage in C.
 
-This module requires that the `jwtfuzz_init()` function is called to initialize the GHC runtime before you call any of the other library functions. Following, you may call `fuzzjwt_fuzz(char** err_ptr, char* jwt)` to generate a series of malicious input.
+This module requires that the `jwtfuzz_init()` function is called to initialize the GHC runtime before you call any of the other library functions. Following, you may call `char** fuzzjwt_fuzz(char** err_ptr, char* jwt)` to generate a series of malicious input.
 
+#### Handling Errors
+
+`err_ptr` should be initialized to NULL prior to calling `fuzzjwt_fuzz` and associated functions. If an error occurred, this variable will be populated with a pointer to a string allocated on the Heap describing an error that occurred.
+
+#### Memory Allocation
+
+Usage of this library allocates memory on the Heap. After consumption of the returned JWTs and `err_ptr`, they must be free'd or you will have a memory leak (overconsumption, not disclosure) in your program whenever you fuzz a JWT. Please see `./so/test/main.c` for an example.
 
 ## Compilation
 
