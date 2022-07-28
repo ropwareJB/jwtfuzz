@@ -30,6 +30,8 @@ This module requires that the `jwtfuzz_init()` function is called to initialize 
 
 Usage of this library allocates memory on the Heap. After consumption of the returned JWTs and `err_ptr`, they must be free'd or you will have a memory leak (overconsumption, not disclosure) in your program whenever you fuzz a JWT. Please see `./so/test/main.c` for an example.
 
+You may use the `void jwtfuzz_free(char* err, char** jwts)` function to deallocate all memory once you have processed the output.
+
 ## Compilation
 
 Requires forked hpack (PR open to hpack):

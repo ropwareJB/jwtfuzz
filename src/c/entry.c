@@ -15,6 +15,17 @@ HsBool jwtfuzz_init(void){
   return HS_BOOL_TRUE;
 }
 
+void jwtfuzz_free(char* err, char** jwts){
+  free(err);
+  char* jwt = NULL;
+  int i;
+  for(i=0, jwt=jwts[i]; jwt != NULL; i++, jwt=jwts[i]){
+   // After some processing, we're done so lets free the memory.
+   free(jwt);
+  }
+  free(jwts);
+}
+
 void jwtfuzz_end(void){
   hs_exit();
 }
