@@ -6,18 +6,18 @@ import           Data.Aeson
 import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.UTF8 as BS.UTF8
+import           Data.Either
 import           Model.Jwt as Jwt
 import           Model.Args
 import           Text.Printf
 
-run :: Args -> String -> IO [Jwt]
+run :: Args -> String -> IO (Either String [Jwt])
 run args l = do
   case parseJwt $ BS.UTF8.fromString l of
     Left e -> do
-      printf "%s\n" e
-      return []
+      return . Left $ printf "Failed to Parse provided JWT: %s" e
     Right jwt ->
-      return $ concatMap (\fn -> fn jwt) attacks
+      return . Right $ concatMap (\fn -> fn jwt) attacks
 
 attacks :: [(Jwt -> [Jwt])]
 attacks =
