@@ -1,8 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <entry.h>
-#include <Lib_stub.h>
+#include <jwtfuzz.h>
 
 #define EXAMPLE_JWT_VALID "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 #define EXAMPLE_JWT_INVALID "..."

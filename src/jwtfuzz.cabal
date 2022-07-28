@@ -52,7 +52,7 @@ foreign-library jwtfuzz
   default-extensions:
       FlexibleContexts
   c-sources:
-      ./c/entry.c
+      ./c/jwtfuzz.c
   build-depends:
       aeson
     , base >=4.7 && <5
