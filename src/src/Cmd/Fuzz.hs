@@ -43,8 +43,22 @@ atk_algoNone jwt =
 
 atk_algoSwap :: Jwt -> [Jwt]
 atk_algoSwap jwt =
-  -- TODO
-  []
+  -- https://datatracker.ietf.org/doc/html/rfc7518#section-3.1
+  map (Jwt.upsertAlgo jwt)
+    [ "RS256"
+    , "RS384"
+    , "RS512"
+    , "HS256"
+    , "HS384"
+    , "HS512"
+    , "ES256"
+    , "ES384"
+    , "ES512"
+    , "PS256"
+    , "PS384"
+    , "PS512"
+    , "none"
+    ]
 
 atk_nullInj :: Jwt -> [Jwt]
 atk_nullInj jwt =

@@ -5,6 +5,7 @@ module Model.Jwt
   , toString
   , insertHeader
   , insertClaim
+  , upsertAlgo
   ) where
 
 import           Data.Aeson
@@ -60,7 +61,6 @@ toString jwt =
     (B64url.encodeBase64Unpadded . BSL.toStrict . encode $ jwtBody jwt)
     (B64url.encodeBase64 $ jwtTail jwt)
 
-
 insertHeader :: Jwt -> (String, String) -> Jwt
 insertHeader jwt (k,v) =
   jwt { jwtHead = KeyMap.insert (Key.fromString k) (Data.Aeson.String $ T.pack v) (jwtHead jwt) }
@@ -69,3 +69,6 @@ insertClaim :: Jwt -> (String, String) -> Jwt
 insertClaim jwt (k,v) =
   jwt { jwtBody = KeyMap.insert (Key.fromString k) (Data.Aeson.String $ T.pack v) (jwtBody jwt) }
 
+upsertAlgo :: Jwt -> String -> Jwt
+upsertAlgo jwt alg =
+  jwt { jwtHead = KeyMap.insert (Key.fromString "alg") (Data.Aeson.String $ T.pack alg) (jwtHead jwt) }
