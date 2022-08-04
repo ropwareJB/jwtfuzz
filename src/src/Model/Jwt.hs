@@ -6,6 +6,7 @@ module Model.Jwt
   , insertHeader
   , insertClaim
   , upsertAlgo
+  , deleteClaimHead
   ) where
 
 import           Data.Aeson
@@ -72,3 +73,7 @@ insertClaim jwt (k,v) =
 upsertAlgo :: Jwt -> String -> Jwt
 upsertAlgo jwt alg =
   jwt { jwtHead = KeyMap.insert (Key.fromString "alg") (Data.Aeson.String $ T.pack alg) (jwtHead jwt) }
+
+deleteClaimHead :: Jwt -> String -> Jwt
+deleteClaimHead jwt claimKey =
+  jwt { jwtHead = KeyMap.delete (Key.fromString claimKey) (jwtHead jwt) }

@@ -93,8 +93,7 @@ atk_exp jwt =
 
 atk_removeAlg :: Jwt -> [Jwt]
 atk_removeAlg jwt =
-  -- TODO
-  []
+  [ Jwt.deleteClaimHead jwt "alg" ]
 
 atk_removeType :: Jwt -> [Jwt]
 atk_removeType jwt =
