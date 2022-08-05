@@ -87,8 +87,17 @@ atk_notBefore jwt =
 -- Expiry
 atk_exp :: Jwt -> [Jwt]
 atk_exp jwt =
-  -- TODO
-  []
+  let
+    iat = Jwt.getBodyClaim jwt "iat"
+  in
+  [ Jwt.mapBodyClaim jwt "exp"
+    (\v -> Data.Aeson.Number $ fromInteger 0)
+  , Jwt.mapBodyClaim jwt "exp"
+    (\v -> case iat of
+      Number x -> iat
+      _        -> Data.Aeson.Number $ fromInteger 0
+    )
+  ]
 
 
 atk_removeAlg :: Jwt -> [Jwt]
@@ -97,8 +106,7 @@ atk_removeAlg jwt =
 
 atk_removeType :: Jwt -> [Jwt]
 atk_removeType jwt =
-  -- TODO
-  []
+  [ Jwt.deleteClaimHead jwt "typ" ]
 
 atk_removeSig :: Jwt -> [Jwt]
 atk_removeSig jwt =

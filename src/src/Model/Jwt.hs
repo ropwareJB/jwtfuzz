@@ -7,6 +7,8 @@ module Model.Jwt
   , insertClaim
   , upsertAlgo
   , deleteClaimHead
+  , getBodyClaim
+  , mapBodyClaim
   ) where
 
 import           Data.Aeson
@@ -19,6 +21,7 @@ import qualified Data.ByteString.Base64.URL as B64url
 import qualified Data.ByteString.Lazy as BSL
 import qualified Data.ByteString.Lazy.UTF8 as BSL.UTF8
 import           Data.ByteString (ByteString)
+import           Data.Maybe
 import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
@@ -77,3 +80,14 @@ upsertAlgo jwt alg =
 deleteClaimHead :: Jwt -> String -> Jwt
 deleteClaimHead jwt claimKey =
   jwt { jwtHead = KeyMap.delete (Key.fromString claimKey) (jwtHead jwt) }
+
+getBodyClaim :: Jwt -> String -> Value
+getBodyClaim jwt key =
+  fromMaybe Null $ KeyMap.lookup (Key.fromString key) (jwtBody jwt)
+
+mapBodyClaim :: Jwt -> String -> (Value -> Value) -> Jwt
+mapBodyClaim jwt key mapV =
+  let
+    initVal = fromMaybe Null $ KeyMap.lookup (Key.fromString key) (jwtBody jwt)
+  in
+  jwt { jwtBody = KeyMap.insert (Key.fromString key) (mapV initVal) (jwtBody jwt) }
