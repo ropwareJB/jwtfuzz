@@ -81,8 +81,18 @@ atk_iat jwt =
 -- NotBefore nbf
 atk_notBefore :: Jwt -> [Jwt]
 atk_notBefore jwt =
-  -- TODO
-  []
+  let
+    iat = Jwt.getBodyClaim jwt "iat"
+  in
+  [ Jwt.mapBodyClaim jwt "nbf"
+    (\v -> Data.Aeson.Number $ fromInteger 0)
+  , Jwt.mapBodyClaim jwt "nbf"
+    (\v -> case iat of
+      Number x -> iat
+      _        -> Data.Aeson.Number $ fromInteger 0
+    )
+  ]
+
 
 -- Expiry
 atk_exp :: Jwt -> [Jwt]
