@@ -75,8 +75,14 @@ atk_psychicSig jwt =
 -- IssuedAt
 atk_iat :: Jwt -> [Jwt]
 atk_iat jwt =
-  -- TODO
-  []
+  [ Jwt.mapBodyClaim jwt "iat"
+    (\v -> Data.Aeson.Number $ fromInteger 0)
+  , Jwt.mapBodyClaim jwt "iat"
+    (\v -> case v of
+      Number x -> Number $ x + 1000000
+      _        -> Data.Aeson.Number $ fromInteger 0
+    )
+  ]
 
 -- NotBefore nbf
 atk_notBefore :: Jwt -> [Jwt]
