@@ -9,6 +9,7 @@ module Model.Jwt
   , deleteClaimHead
   , getBodyClaim
   , mapBodyClaim
+  , mapClaims
   ) where
 
 import           Data.Aeson
@@ -91,3 +92,19 @@ mapBodyClaim jwt key mapV =
     initVal = fromMaybe Null $ KeyMap.lookup (Key.fromString key) (jwtBody jwt)
   in
   jwt { jwtBody = KeyMap.insert (Key.fromString key) (mapV initVal) (jwtBody jwt) }
+
+mapClaims :: (Key -> Value -> Value) -> Jwt -> [Jwt]
+mapClaims mapper jwt =
+  let
+    jwtBodies =
+        map
+          (\claim ->
+            case KeyMap.lookup claim (jwtBody jwt) of
+              Nothing ->
+                jwtBody jwt
+              Just v ->
+                KeyMap.insert claim (mapper claim v) (jwtBody jwt)
+          )
+          (KeyMap.keys $ jwtBody jwt)
+  in
+  map (\v -> jwt { jwtBody = v}) jwtBodies

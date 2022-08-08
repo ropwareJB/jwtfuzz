@@ -7,6 +7,7 @@ import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.UTF8 as BS.UTF8
 import           Data.Either
+import qualified Data.Text as Text
 import           Model.Jwt as Jwt
 import           Model.Args
 import           Text.Printf
@@ -60,10 +61,55 @@ atk_algoSwap jwt =
     , "none"
     ]
 
+spray :: Jwt -> String -> [Jwt]
+spray jwt payload =
+  Jwt.mapClaims
+    (\k v ->
+      case v of
+        Data.Aeson.Object _ ->
+          -- What do do here? Not a primitive. TODO: Traverse
+          v
+        Data.Aeson.Array _ ->
+          -- What do do here? Not a primitive. TODO: Traverse
+          v
+        Data.Aeson.String s ->
+          Data.Aeson.String $ Text.pack payload
+        Data.Aeson.Number _ ->
+          Data.Aeson.String $ Text.pack payload
+        Data.Aeson.Bool _ ->
+          Data.Aeson.String $ Text.pack payload
+        Data.Aeson.Null ->
+          Data.Aeson.String $ Text.pack payload
+    )
+    jwt
+
+sprayInject :: Jwt -> String -> [Jwt]
+sprayInject jwt payload =
+  Jwt.mapClaims
+    (\k v ->
+      case v of
+        Data.Aeson.Object _ ->
+          -- What do do here? Not a primitive.
+          v
+        Data.Aeson.Array _ ->
+          -- What do do here? Not a primitive.
+          v
+        Data.Aeson.String s ->
+          Data.Aeson.String $ s <> Text.pack payload
+        Data.Aeson.Number _ ->
+          -- What do do here? Convert to String?
+          v
+        Data.Aeson.Bool _ ->
+          -- What do do here? Convert to String?
+          v
+        Data.Aeson.Null ->
+          v
+    )
+    jwt
+
 atk_nullInj :: Jwt -> [Jwt]
 atk_nullInj jwt =
-  -- TODO
-  []
+  sprayInject jwt "\0"
 
 atk_psychicSig :: Jwt -> [Jwt]
 atk_psychicSig jwt =
