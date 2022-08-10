@@ -68,18 +68,18 @@ spray jwt payload =
       case v of
         Data.Aeson.Object _ ->
           -- What do do here? Not a primitive. TODO: Traverse
-          v
+          [ v ]
         Data.Aeson.Array _ ->
           -- What do do here? Not a primitive. TODO: Traverse
-          v
+          [ v ]
         Data.Aeson.String s ->
-          Data.Aeson.String $ Text.pack payload
+          [ Data.Aeson.String $ Text.pack payload ]
         Data.Aeson.Number _ ->
-          Data.Aeson.String $ Text.pack payload
+          [ Data.Aeson.String $ Text.pack payload ]
         Data.Aeson.Bool _ ->
-          Data.Aeson.String $ Text.pack payload
+          [ Data.Aeson.String $ Text.pack payload ]
         Data.Aeson.Null ->
-          Data.Aeson.String $ Text.pack payload
+          [ Data.Aeson.String $ Text.pack payload ]
     )
     jwt
 
@@ -90,20 +90,20 @@ sprayInject jwt payload =
       case v of
         Data.Aeson.Object _ ->
           -- What do do here? Not a primitive.
-          v
+          [ v ]
         Data.Aeson.Array _ ->
           -- What do do here? Not a primitive.
-          v
+          [ v ]
         Data.Aeson.String s ->
-          Data.Aeson.String $ s <> Text.pack payload
+          [ Data.Aeson.String $ s <> Text.pack payload ]
         Data.Aeson.Number _ ->
           -- What do do here? Convert to String?
-          v
+          [ v ]
         Data.Aeson.Bool _ ->
           -- What do do here? Convert to String?
-          v
+          [ v ]
         Data.Aeson.Null ->
-          v
+          [ v ]
     )
     jwt
 

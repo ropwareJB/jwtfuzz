@@ -93,18 +93,16 @@ mapBodyClaim jwt key mapV =
   in
   jwt { jwtBody = KeyMap.insert (Key.fromString key) (mapV initVal) (jwtBody jwt) }
 
-mapClaims :: (Key -> Value -> Value) -> Jwt -> [Jwt]
+mapClaims :: (Key -> Value -> [Value]) -> Jwt -> [Jwt]
 mapClaims mapper jwt =
   let
     jwtBodies =
+      concatMap
+      (\(k,v) ->
         map
-          (\claim ->
-            case KeyMap.lookup claim (jwtBody jwt) of
-              Nothing ->
-                jwtBody jwt
-              Just v ->
-                KeyMap.insert claim (mapper claim v) (jwtBody jwt)
-          )
-          (KeyMap.keys $ jwtBody jwt)
+          (\v2 -> KeyMap.insert k v2 $ jwtBody jwt)
+          (mapper k v)
+      )
+      (KeyMap.toList $ jwtBody jwt)
   in
   map (\v -> jwt { jwtBody = v}) jwtBodies
