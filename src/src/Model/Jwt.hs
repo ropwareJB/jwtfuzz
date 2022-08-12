@@ -10,9 +10,11 @@ module Model.Jwt
   , getBodyClaim
   , mapBodyClaim
   , mapClaims
+  , mapSprayKeymap
   ) where
 
 import           Data.Aeson
+import           Data.Aeson.KeyMap (KeyMap)
 import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.Aeson.Key as Key
 import           Data.Bifunctor
@@ -96,13 +98,16 @@ mapBodyClaim jwt key mapV =
 mapClaims :: (Key -> Value -> [Value]) -> Jwt -> [Jwt]
 mapClaims mapper jwt =
   let
-    jwtBodies =
-      concatMap
-      (\(k,v) ->
-        map
-          (\v2 -> KeyMap.insert k v2 $ jwtBody jwt)
-          (mapper k v)
-      )
-      (KeyMap.toList $ jwtBody jwt)
+    jwtBodies = mapSprayKeymap mapper $ jwtBody jwt
   in
   map (\v -> jwt { jwtBody = v}) jwtBodies
+
+mapSprayKeymap :: (Key -> Value -> [Value]) -> KeyMap Value -> [KeyMap Value]
+mapSprayKeymap mapper keymap =
+  concatMap
+  (\(k,v) ->
+    map
+      (\v2 -> KeyMap.insert k v2 keymap)
+      (mapper k v)
+  )
+  (KeyMap.toList keymap)

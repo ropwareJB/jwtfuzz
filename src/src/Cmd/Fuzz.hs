@@ -64,48 +64,55 @@ atk_algoSwap jwt =
 spray :: Jwt -> String -> [Jwt]
 spray jwt payload =
   Jwt.mapClaims
-    (\k v ->
-      case v of
-        Data.Aeson.Object _ ->
-          -- What do do here? Not a primitive. TODO: Traverse
-          [ v ]
-        Data.Aeson.Array _ ->
-          -- What do do here? Not a primitive. TODO: Traverse
-          [ v ]
-        Data.Aeson.String s ->
-          [ Data.Aeson.String $ Text.pack payload ]
-        Data.Aeson.Number _ ->
-          [ Data.Aeson.String $ Text.pack payload ]
-        Data.Aeson.Bool _ ->
-          [ Data.Aeson.String $ Text.pack payload ]
-        Data.Aeson.Null ->
-          [ Data.Aeson.String $ Text.pack payload ]
-    )
+    (\k v -> spray_value v payload)
     jwt
 
 sprayInject :: Jwt -> String -> [Jwt]
 sprayInject jwt payload =
   Jwt.mapClaims
-    (\k v ->
-      case v of
-        Data.Aeson.Object _ ->
-          -- What do do here? Not a primitive.
-          [ v ]
-        Data.Aeson.Array _ ->
-          -- What do do here? Not a primitive.
-          [ v ]
-        Data.Aeson.String s ->
-          [ Data.Aeson.String $ s <> Text.pack payload ]
-        Data.Aeson.Number _ ->
-          -- What do do here? Convert to String?
-          [ v ]
-        Data.Aeson.Bool _ ->
-          -- What do do here? Convert to String?
-          [ v ]
-        Data.Aeson.Null ->
-          [ v ]
-    )
+    (\k v -> sprayInject_value v payload)
     jwt
+
+spray_value :: Data.Aeson.Value -> String -> [Data.Aeson.Value]
+spray_value val payload =
+  case val of
+    Data.Aeson.Object _ ->
+      -- What do do here? Not a primitive. TODO: Traverse
+      [ val ]
+    Data.Aeson.Array _ ->
+      -- What do do here? Not a primitive. TODO: Traverse
+      [ val ]
+    Data.Aeson.String s ->
+      [ Data.Aeson.String $ Text.pack payload ]
+    Data.Aeson.Number _ ->
+      [ Data.Aeson.String $ Text.pack payload ]
+    Data.Aeson.Bool _ ->
+      [ Data.Aeson.String $ Text.pack payload ]
+    Data.Aeson.Null ->
+      [ Data.Aeson.String $ Text.pack payload ]
+
+sprayInject_value :: Data.Aeson.Value -> String -> [Data.Aeson.Value]
+sprayInject_value val payload =
+  case val of
+    Data.Aeson.Object o ->
+      -- Construct a list of Data.Aeson.Object values that have been mutated
+      map Data.Aeson.Object $
+        Jwt.mapSprayKeymap
+          (\k v -> sprayInject_value v payload)
+          o
+    Data.Aeson.Array _ ->
+      -- What do do here? Not a primitive.
+      [ val ]
+    Data.Aeson.String s ->
+      [ Data.Aeson.String $ s <> Text.pack payload ]
+    Data.Aeson.Number _ ->
+      -- What do do here? Convert to String?
+      [ val ]
+    Data.Aeson.Bool _ ->
+      -- What do do here? Convert to String?
+      [ val ]
+    Data.Aeson.Null ->
+      [ val ]
 
 atk_nullInj :: Jwt -> [Jwt]
 atk_nullInj jwt =
