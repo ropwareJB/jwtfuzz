@@ -7,6 +7,7 @@ import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.UTF8 as BS.UTF8
 import           Data.Either
+import qualified Data.Vector as Vector
 import qualified Data.Text as Text
 import           Model.Jwt as Jwt
 import           Model.Args
@@ -76,12 +77,16 @@ sprayInject jwt payload =
 spray_value :: Data.Aeson.Value -> String -> [Data.Aeson.Value]
 spray_value val payload =
   case val of
-    Data.Aeson.Object _ ->
-      -- What do do here? Not a primitive. TODO: Traverse
-      [ val ]
-    Data.Aeson.Array _ ->
-      -- What do do here? Not a primitive. TODO: Traverse
-      [ val ]
+    Data.Aeson.Object o ->
+      -- Construct a list of Data.Aeson.Object values that have been mutated
+      map Data.Aeson.Object $
+        Jwt.mapSprayKeymap
+          (\k v -> spray_value v payload)
+          o
+    Data.Aeson.Array xs_vector ->
+      concatMap
+        (\v -> spray_value v payload)
+        xs_vector
     Data.Aeson.String s ->
       [ Data.Aeson.String $ Text.pack payload ]
     Data.Aeson.Number _ ->
@@ -100,9 +105,10 @@ sprayInject_value val payload =
         Jwt.mapSprayKeymap
           (\k v -> sprayInject_value v payload)
           o
-    Data.Aeson.Array _ ->
-      -- What do do here? Not a primitive.
-      [ val ]
+    Data.Aeson.Array xs_vector ->
+      concatMap
+        (\v -> sprayInject_value val payload)
+        xs_vector
     Data.Aeson.String s ->
       [ Data.Aeson.String $ s <> Text.pack payload ]
     Data.Aeson.Number _ ->

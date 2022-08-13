@@ -30,6 +30,7 @@ dependencies:
 - cryptonite
 - utf8-string
 - base64
+- vector
 
 library:
   source-dirs: src
