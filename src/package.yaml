@@ -1,6 +1,6 @@
 name:                jwtfuzz
 version:             0.1.0.0
-github:              "montycarlo/jwtfuzz"
+github:              "ropwareJB/jwtfuzz"
 license:             MIT
 author:              "Joshua Brown"
 maintainer:          "josh@ropware.com"
@@ -15,7 +15,7 @@ extra-source-files: []
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/montycarlo/jwtfuzz#readme>
+description:         Please see the README on GitHub at <https://github.com/ropwareJB/jwtfuzz#readme>
 
 default-extensions:
   FlexibleContexts
@@ -35,6 +35,11 @@ dependencies:
 library:
   source-dirs: src
 
+flags:
+  static:
+    manual: true
+    default: false
+
 executables:
   jwtfuzz-exe:
     main:                Main.hs
@@ -44,11 +49,17 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     - -Wall
-    - -static
     - -optl-pthread
-    - -optl-static
-    cc-options: -static
-    ld-options: -static -pthread
+    when:
+      - condition: flag(static)
+        then:
+          ghc-options:
+          - -static
+          - -optl-static
+          cc-options: -static
+          ld-options: -static -pthread
+        else:
+          {}
     extra-lib-dirs: ./.system-work/lib
     dependencies:
     - jwtfuzz
@@ -59,36 +70,36 @@ foreign-library:
       Paths_jwtfuzz
   source-dirs:
       src
-  # ghc-options: -dynamic -shared -fPIC -L/usr/lib/ghc-9.0.2/rts -lHSrts-ghc9.0.2
-  # cc-options: -static
+  ghc-options: -dynamic -shared -fPIC -L/usr/lib/ghc-9.0.2/rts -lHSrts-ghc9.0.2
+  cc-options: -static
   c-sources:
       ./c/entry.c
   dependencies:
     - jwtfuzz
 
-# foreign-libraries:
-#   jwtfuzz.so:
-#     main:                Main.hs
-#     source-dirs:         app
-#     ghc-options:
-#       # - -threaded
-#       #- -Wall
-#       # - -static
-#       # - -optl-pthread
-#       # - -optl-static
-#     - -dynamic
-#     - -shared
-#     - -fPIC
-#       #- -o libjwtfuzz.so
-#     - -L/usr/lib/ghc-9.0.2/rts
-#     - -lHSrts-ghc9.0.2
-#     c-sources: ./../so/entry.c
-#     cc-options:
-#     - -static
-#       #ld-options: -static -pthread
-#     extra-lib-dirs: ./.system-work/lib
-#     dependencies:
-#     - jwtfuzz
+foreign-libraries:
+  jwtfuzz.so:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+      # - -threaded
+      #- -Wall
+      # - -static
+      # - -optl-pthread
+      # - -optl-static
+    - -dynamic
+    - -shared
+    - -fPIC
+      #- -o libjwtfuzz.so
+    - -L/usr/lib/ghc-9.0.2/rts
+    - -lHSrts-ghc9.0.2
+    c-sources: ./../so/entry.c
+    cc-options:
+    - -static
+      #ld-options: -static -pthread
+    extra-lib-dirs: ./.system-work/lib
+    dependencies:
+    - jwtfuzz
 
 tests:
   jwtfuzz-test:
