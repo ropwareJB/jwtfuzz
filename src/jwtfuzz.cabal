@@ -1,8 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: 4dce82060bb0946524a075e699627dba60e1230b901e86a3208ea0be513ba1e8
 
 name:           jwtfuzz
 version:        0.1.0.0
@@ -19,6 +21,10 @@ source-repository head
   type: git
   location: https://github.com/montycarlo/jwtfuzz
 
+flag static
+  manual: True
+  default: False
+
 library
   exposed-modules:
       Cmd.Fuzz
@@ -29,8 +35,7 @@ library
       Paths_jwtfuzz
   hs-source-dirs:
       src
-  default-extensions:
-      FlexibleContexts
+  default-extensions: FlexibleContexts
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -39,30 +44,6 @@ library
     , cmdargs
     , cryptonite
     , extra
-    , text
-    , utf8-string
-    , vector
-  default-language: Haskell2010
-
-foreign-library jwtfuzz
-  type: native-shared
-  other-modules:
-      Paths_jwtfuzz
-  hs-source-dirs:
-      src
-  default-extensions:
-      FlexibleContexts
-  c-sources:
-      ./c/jwtfuzz.c
-  build-depends:
-      aeson
-    , base >=4.7 && <5
-    , base64
-    , bytestring
-    , cmdargs
-    , cryptonite
-    , extra
-    , jwtfuzz
     , text
     , utf8-string
     , vector
@@ -74,13 +55,10 @@ executable jwtfuzz-exe
       Paths_jwtfuzz
   hs-source-dirs:
       app
-  default-extensions:
-      FlexibleContexts
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -static -optl-pthread -optl-static
-  cc-options: -static
+  default-extensions: FlexibleContexts
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -optl-pthread
   extra-lib-dirs:
       ./.system-work/lib
-  ld-options: -static -pthread
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -93,6 +71,11 @@ executable jwtfuzz-exe
     , text
     , utf8-string
     , vector
+  if flag(static)
+    ghc-options: -static -optl-static
+    cc-options: -static
+    ld-options: -static -pthread
+  else
   default-language: Haskell2010
 
 test-suite jwtfuzz-test
@@ -102,8 +85,7 @@ test-suite jwtfuzz-test
       Paths_jwtfuzz
   hs-source-dirs:
       test
-  default-extensions:
-      FlexibleContexts
+  default-extensions: FlexibleContexts
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
