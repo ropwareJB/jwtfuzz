@@ -31,6 +31,7 @@ dependencies:
 - utf8-string
 - base64
 - vector
+- data-default
 
 library:
   source-dirs: src
@@ -60,7 +61,6 @@ executables:
           ld-options: -static -pthread
         else:
           {}
-    extra-lib-dirs: ./.system-work/lib
     dependencies:
     - jwtfuzz
 
@@ -97,7 +97,6 @@ foreign-libraries:
     cc-options:
     - -static
       #ld-options: -static -pthread
-    extra-lib-dirs: ./.system-work/lib
     dependencies:
     - jwtfuzz
 

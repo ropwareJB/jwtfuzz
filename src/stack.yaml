@@ -2,5 +2,7 @@ packages:
 - .
 resolver: lts-19.13
 
+system-ghc: true
+
 extra-deps:
   []

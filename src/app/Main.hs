@@ -7,7 +7,7 @@ import Model.Args
 cmdDefault :: Args
 cmdDefault =
   ArgsDefault
-    {
+    { outputFile = Nothing
     } &= name "fuzz"
 
 mode :: Mode (CmdArgs Args)
