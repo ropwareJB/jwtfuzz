@@ -4,6 +4,7 @@ module Lib
     , fuzzJwt_c
     ) where
 
+import           Data.Default
 import           Data.Either
 import           Foreign.C.String
 import           Foreign.Ptr
@@ -14,6 +15,7 @@ import qualified Cmd.Fuzz
 import           Model.Args
 import           Model.Jwt as Jwt
 import           Text.Printf
+import qualified System.IO as IO
 
 foreign export ccall "fuzzjwt_fuzz" fuzzJwt_c :: Ptr CString -> CString -> IO (Ptr CString)
 
@@ -23,14 +25,20 @@ process args = do
     ArgsDefault{} -> do
       l <- getLine
       jwts_e <- Cmd.Fuzz.run args l
-      printJwts jwts_e
+
+      fHandle <- case outputFile args of
+        Nothing ->
+          return IO.stdout
+        Just filename ->
+          IO.openFile filename IO.WriteMode
+      printJwts fHandle jwts_e
 
 -- Take in a (Ptr CString) to capture any error message.
 -- Will return a null-terminated list of char*
 fuzzJwt_c :: Ptr CString -> CString -> IO (Ptr CString)
 fuzzJwt_c ptr_err jwt_cstr = do
   jwt <- peekCString jwt_cstr
-  jwts_e <- Cmd.Fuzz.run (ArgsDefault{}) jwt
+  jwts_e <- Cmd.Fuzz.run def jwt
   case jwts_e of
     Left e -> do
       poke ptr_err =<< newCString e
@@ -38,6 +46,6 @@ fuzzJwt_c ptr_err jwt_cstr = do
     Right jwts ->
       newArray0 nullPtr =<< mapM (newCString . Jwt.toString) jwts
 
-printJwts :: Either String [Jwt] -> IO()
-printJwts (Left err) = printf "%s\n" err
-printJwts (Right jwts) = mapM_ (printf "%s\n" . Jwt.toString) $ jwts
+printJwts :: IO.Handle -> Either String [Jwt] -> IO()
+printJwts f (Left err) = hPrintf f "%s\n" err
+printJwts f (Right jwts) = mapM_ (hPrintf f "%s\n" . Jwt.toString) $ jwts

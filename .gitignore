@@ -23,4 +23,5 @@ cabal.project.local~
 .ghc.environment.*
 so/test/test
 bin/jwtfuzz-exe
-
+*.swp
+*.swo

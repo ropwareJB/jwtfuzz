@@ -4,13 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4dce82060bb0946524a075e699627dba60e1230b901e86a3208ea0be513ba1e8
+-- hash: 4ef4f0cfdcbd7d36d8e1426e14ba787341c478664416d000c9808e712ebc4e40
 
 name:           jwtfuzz
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/montycarlo/jwtfuzz#readme>
-homepage:       https://github.com/montycarlo/jwtfuzz#readme
-bug-reports:    https://github.com/montycarlo/jwtfuzz/issues
+description:    Please see the README on GitHub at <https://github.com/ropwareJB/jwtfuzz#readme>
+homepage:       https://github.com/ropwareJB/jwtfuzz#readme
+bug-reports:    https://github.com/ropwareJB/jwtfuzz/issues
 author:         Joshua Brown
 maintainer:     josh@ropware.com
 copyright:      2022 Joshua Brown
@@ -19,7 +19,7 @@ build-type:     Simple
 
 source-repository head
   type: git
-  location: https://github.com/montycarlo/jwtfuzz
+  location: https://github.com/ropwareJB/jwtfuzz
 
 flag static
   manual: True
@@ -43,6 +43,7 @@ library
     , bytestring
     , cmdargs
     , cryptonite
+    , data-default
     , extra
     , text
     , utf8-string
@@ -57,8 +58,6 @@ executable jwtfuzz-exe
       app
   default-extensions: FlexibleContexts
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -optl-pthread
-  extra-lib-dirs:
-      ./.system-work/lib
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -66,6 +65,7 @@ executable jwtfuzz-exe
     , bytestring
     , cmdargs
     , cryptonite
+    , data-default
     , extra
     , jwtfuzz
     , text
@@ -94,6 +94,7 @@ test-suite jwtfuzz-test
     , bytestring
     , cmdargs
     , cryptonite
+    , data-default
     , extra
     , jwtfuzz
     , text
