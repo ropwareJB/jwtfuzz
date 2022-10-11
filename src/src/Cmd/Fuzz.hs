@@ -107,7 +107,7 @@ sprayInject_value val payload =
           o
     Data.Aeson.Array xs_vector ->
       concatMap
-        (\v -> sprayInject_value val payload)
+        (\v -> sprayInject_value v payload)
         xs_vector
     Data.Aeson.String s ->
       [ Data.Aeson.String $ s <> Text.pack payload ]
@@ -122,7 +122,7 @@ sprayInject_value val payload =
 
 atk_nullInj :: Jwt -> [Jwt]
 atk_nullInj jwt =
-  sprayInject jwt "\0"
+  sprayInject jwt ['\0']
 
 atk_psychicSig :: Jwt -> [Jwt]
 atk_psychicSig jwt =

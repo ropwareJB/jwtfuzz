@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4ef4f0cfdcbd7d36d8e1426e14ba787341c478664416d000c9808e712ebc4e40
+-- hash: 21f409ef496a0d1ccbc466ce76099327385091990689d1955dc56793fcde5c52
 
 name:           jwtfuzz
 version:        0.1.0.0
@@ -45,6 +45,7 @@ library
     , cryptonite
     , data-default
     , extra
+    , libjwt-typed
     , text
     , utf8-string
     , vector
@@ -68,6 +69,7 @@ executable jwtfuzz-exe
     , data-default
     , extra
     , jwtfuzz
+    , libjwt-typed
     , text
     , utf8-string
     , vector
@@ -97,6 +99,7 @@ test-suite jwtfuzz-test
     , data-default
     , extra
     , jwtfuzz
+    , libjwt-typed
     , text
     , utf8-string
     , vector

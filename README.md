@@ -32,10 +32,20 @@ Usage of this library allocates memory on the Heap. After consumption of the ret
 
 You may use the `void jwtfuzz_free(char* err, char** jwts)` function to deallocate all memory once you have processed the output.
 
-## Compilation
+## Dependencies
 
-Requires forked hpack (PR open to hpack):
+#### Compilation
+- Requires forked hpack (PR open to hpack):
 https://github.com/sol/hpack/pull/518
+
+#### Runtime
+- Requires libjwt
+```bash
+# OSX
+brew install libjwt
+# Linx
+# TODO: ?????
+```
 
 #### Binary
 ```

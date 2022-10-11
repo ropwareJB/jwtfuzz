@@ -16,6 +16,7 @@ import           Model.Args
 import           Model.Jwt as Jwt
 import           Text.Printf
 import qualified System.IO as IO
+import qualified System.Exit as Exit
 
 foreign export ccall "fuzzjwt_fuzz" fuzzJwt_c :: Ptr CString -> CString -> IO (Ptr CString)
 
@@ -28,6 +29,8 @@ process args = do
 
       fHandle <- case outputFile args of
         Nothing ->
+          return IO.stdout
+        Just "-" ->
           return IO.stdout
         Just filename ->
           IO.openFile filename IO.WriteMode
@@ -46,6 +49,8 @@ fuzzJwt_c ptr_err jwt_cstr = do
     Right jwts ->
       newArray0 nullPtr =<< mapM (newCString . Jwt.toString) jwts
 
-printJwts :: IO.Handle -> Either String [Jwt] -> IO()
-printJwts f (Left err) = hPrintf f "%s\n" err
-printJwts f (Right jwts) = mapM_ (hPrintf f "%s\n" . Jwt.toString) $ jwts
+printJwts :: IO.Handle -> Either String [Jwt] -> IO ()
+printJwts f (Left err) =
+  hPrintf f "%s\n" err
+printJwts f (Right jwts) =
+  mapM_ (hPrintf f "%s\n" . Jwt.toString) $ jwts
