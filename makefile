@@ -11,11 +11,17 @@ PATH_LIBHS_JWTFUZZ := ${BIN_PATH_ABS}/build/libHSjwtfuzz.so
 PATH_LIB_JWTFUZZ := ${BIN_PATH_ABS}/build/jwtfuzz/libjwtfuzz.so
 
 bin: FORCE
-	cd src && stack build --allow-different-user
+	cd src && \
+		stack build \
+		--allow-different-user
 	make copy
 
 watch: FORCE
-	cd src && stack build --allow-different-user --file-watch --exec "make -C ./.. copy"
+	cd src && \
+		stack build \
+		--allow-different-user \
+		--file-watch \
+		--exec "make -C ./.. copy"
 
 copy: FORCE
 	cp ./src/${BIN_PATH}/build/${BIN}/${BIN} bin/;

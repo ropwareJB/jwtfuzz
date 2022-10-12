@@ -3,7 +3,14 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: libjwt-typed-0.2@sha256:b7762f6d6c380c0fcddaff119714dcb885e4c57d21ecdf0700e75e694e37c312,7962
+    pantry-tree:
+      size: 2603
+      sha256: d2b3a5a4cca5b1b1c448bddf4202d6c18cd868c8ab380e3f7a4eb4e7e26d2ac6
+  original:
+    hackage: libjwt-typed-0.2@sha256:b7762f6d6c380c0fcddaff119714dcb885e4c57d21ecdf0700e75e694e37c312,7962
 snapshots:
 - completed:
     size: 618740

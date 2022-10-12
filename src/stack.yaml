@@ -2,5 +2,9 @@ packages:
 - .
 resolver: lts-19.13
 
+system-ghc: true
+allow-newer: true
+
 extra-deps:
-  []
+- libjwt-typed-0.2@sha256:b7762f6d6c380c0fcddaff119714dcb885e4c57d21ecdf0700e75e694e37c312,7962
+
