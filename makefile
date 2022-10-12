@@ -7,8 +7,26 @@ PATH_STACK_PROGRAMS := $(shell cd src && stack path --programs)
 BIN := jwtfuzz-exe
 BUILD_CONTAINER := ${BIN}-gcp-builder
 
-PATH_LIBHS_JWTFUZZ := ${BIN_PATH_ABS}/build/libHSjwtfuzz.so
-PATH_LIB_JWTFUZZ := ${BIN_PATH_ABS}/build/jwtfuzz/libjwtfuzz.so
+ifeq ($(OS),Windows_NT)
+    # CCFLAGS += -D WIN32
+		# 2022-10-12: Not currently supported
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        #CCFLAGS += -D LINUX
+				PATH_LIBHS_JWTFUZZ := ${BIN_PATH_ABS}/build/libHSjwtfuzz.so
+				PATH_LIB_JWTFUZZ := ${BIN_PATH_ABS}/build/jwtfuzz/libjwtfuzz.so
+				LIB_PRELOAD := LD_PRELOAD="${PATH_LIB_JWTFUZZ} ${PATH_LIBHS_JWTFUZZ}"
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        #CCFLAGS += -D OSX
+				PATH_LIBHS_JWTFUZZ := ${BIN_PATH_ABS}/build/libHSjwtfuzz.dylib
+				PATH_LIB_JWTFUZZ := ${BIN_PATH_ABS}/build/jwtfuzz/libjwtfuzz.dylib
+				LIB_PRELOAD := DYLD_INSERT_LIBRARIES="${PATH_LIB_JWTFUZZ}:${PATH_LIBHS_JWTFUZZ}"
+    endif
+endif
+
+PATH_GHC_INCLUDES := ${PATH_STACK_PROGRAMS}/ghc-tinfo6-9.0.2/lib/ghc-9.0.2/include
 
 bin: FORCE
 	cd src && \
@@ -34,13 +52,18 @@ so: FORCE
 		stack build --allow-different-user
 
 	# Create a symlink to libHSjwtfuzz
-	ln -s ${BIN_PATH_ABS}/build/libHSjwtfuzz-*.so ${PATH_LIBHS_JWTFUZZ}
+	@if [ $(UNAME_S) = "Linux" ]; then \
+		ln -s ${BIN_PATH_ABS}/build/libHSjwtfuzz-*.so ${PATH_LIBHS_JWTFUZZ}; \
+	fi
+	@if [ $(UNAME_S) = "Darwin" ]; then \
+		ln -s ${BIN_PATH_ABS}/build/libHSjwtfuzz-*.dylib ${PATH_LIBHS_JWTFUZZ}; \
+	fi
 
 	# Compile test program that links with jwtfuzz lib
 	cd so/test && \
 		gcc -o test \
 		-I ${PATH_STACK}/c \
-		-I ${PATH_STACK_PROGRAMS}/ghc-tinfo6-9.0.2/lib/ghc-9.0.2/include \
+		-I ${PATH_GHC_INCLUDES} \
 		-I ${BIN_PATH_ABS}/build \
 		-L${BIN_PATH_ABS}/build/jwtfuzz \
 		-L${BIN_PATH_ABS}/build \
@@ -49,12 +72,9 @@ so: FORCE
 		-Wl,-rpath,'$$ORIGIN' \
 		main.c
 
-	echo "Runing Tests.."
+	echo "Running Tests.."
 	cd so/test && \
-		LD_PRELOAD="\
-${PATH_LIB_JWTFUZZ} \
-${PATH_LIBHS_JWTFUZZ}" \
-		./test
+		 ${LIB_PRELOAD} ./test
 
 docker-build-container:
 	sudo docker build -t ${BUILD_CONTAINER} -f docker/Dockerfile-build .

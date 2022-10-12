@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "HsFFI.h"
+#include "Rts.h"
 
 // https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/ffi.html#making-a-haskell-library-that-can-be-called-from-foreign-code
 HsBool jwtfuzz_init(void){

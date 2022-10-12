@@ -6,7 +6,7 @@
 #define EXAMPLE_JWT_VALID "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 #define EXAMPLE_JWT_INVALID "..."
 
-void* fuzzJwt(char* jwt);
+void fuzzJwt(char* jwt);
 
 int main(){
 	jwtfuzz_init();
@@ -18,7 +18,7 @@ int main(){
 	return 0;
 }
 
-void* fuzzJwt(char* jwt){
+void fuzzJwt(char* jwt){
 	char* fuzz_err = NULL;
 	char** jwts = fuzzjwt_fuzz(&fuzz_err, jwt);
 
