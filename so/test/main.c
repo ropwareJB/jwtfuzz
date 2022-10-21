@@ -9,28 +9,28 @@
 void fuzzJwt(char* jwt);
 
 int main(){
-	jwtfuzz_init();
+  jwtfuzz_init();
 
-	fuzzJwt(EXAMPLE_JWT_VALID);
-	fuzzJwt(EXAMPLE_JWT_INVALID);
+  fuzzJwt(EXAMPLE_JWT_VALID);
+  fuzzJwt(EXAMPLE_JWT_INVALID);
 
-	jwtfuzz_end();
-	return 0;
+  jwtfuzz_end();
+  return 0;
 }
 
 void fuzzJwt(char* jwt){
-	char* fuzz_err = NULL;
-	char** jwts = fuzzjwt_fuzz(&fuzz_err, jwt);
+  char* fuzz_err = NULL;
+  char** jwts = fuzzjwt_fuzz(&fuzz_err, jwt);
 
-	if(fuzz_err != NULL){
-		printf("An error occurred: %s", fuzz_err);
-	}else{
-		/* Print out each JWT for example */
-		char* jwt = NULL;
-		int i;
-		for(i=0, jwt=jwts[i]; jwt != NULL; i++, jwt=jwts[i]){
-		 printf("%s\n", jwt);
-		}
-	}
-	jwtfuzz_free(fuzz_err, jwts);
+  if(fuzz_err != NULL){
+    printf("An error occurred: %s", fuzz_err);
+  }else{
+    /* Print out each JWT for example */
+    char* jwt = NULL;
+    int i;
+    for(i=0, jwt=jwts[i]; jwt != NULL; i++, jwt=jwts[i]){
+      printf("%s\n", jwt);
+    }
+  }
+  jwtfuzz_free(fuzz_err, jwts);
 }

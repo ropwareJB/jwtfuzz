@@ -25,3 +25,4 @@ so/test/test
 bin/jwtfuzz-exe
 *.swp
 *.swo
+go/main

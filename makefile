@@ -85,6 +85,10 @@ docker-build: docker-build-container
 docker-build-watch: docker-build-container
 	sudo docker run -it -v $$(pwd):/app ${BUILD_CONTAINER} bash -c 'cd /app/; make watch'
 
+go:
+	cd go && \
+		go build
+
 clean:
 	rm bin/*
 
