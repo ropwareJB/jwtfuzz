@@ -1,11 +1,11 @@
 
-HS_LIBDIR := $(shell cd src && stack ghc -- --print-libdir)
-PATH_STACK := $(shell cd src && pwd)
-BIN_PATH := $(shell cd src && stack path --dist-dir --allow-different-user)
+HS_LIBDIR := $(shell cd src && stack ghc -- --print-libdir 2>/dev/null)
+PATH_STACK := $(shell cd src && pwd 2>/dev/null)
+BIN_PATH := $(shell cd src && stack path --dist-dir --allow-different-user 2>/dev/null)
 BIN_PATH_ABS := $(shell pwd)/src/${BIN_PATH}
-PATH_STACK_PROGRAMS := $(shell cd src && stack path --programs)
+PATH_STACK_PROGRAMS := $(shell cd src && stack path --programs 2>/dev/null)
 BIN := jwtfuzz-exe
-BUILD_CONTAINER := ${BIN}-gcp-builder
+BUILD_CONTAINER := ${BIN}-builder
 
 ifeq ($(OS),Windows_NT)
     # CCFLAGS += -D WIN32

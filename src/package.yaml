@@ -32,7 +32,7 @@ dependencies:
 - base64
 - vector
 - data-default
-- libjwt-typed
+# - libjwt-typed
 
 library:
   source-dirs: src
@@ -53,15 +53,12 @@ executables:
     - -Wall
     - -optl-pthread
     when:
-      - condition: flag(static)
-        then:
-          ghc-options:
-          - -static
-          - -optl-static
-          cc-options: -static
-          ld-options: -static -pthread
-        else:
-          {}
+      condition: flag(static)
+      ghc-options:
+        - -static
+        - -optl-static
+      cc-options: -static
+      ld-options: -static -pthread
     dependencies:
     - jwtfuzz
 

@@ -13,6 +13,7 @@ package main
 // TODO: Install 
 
 // TMP run:
+// CGO_LDFLAGS="-L/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build -L/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build/jwtfuzz -ljwtfuzz -lHSjwtfuzz" CGO_CXXFLAGS="-rpath=." 
 // DYLD_LIBRARY_PATH="/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build:/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build/jwtfuzz" ./main
 
 /*
