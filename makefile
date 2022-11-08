@@ -6,24 +6,25 @@ BIN_PATH_ABS := $(shell pwd)/src/${BIN_PATH}
 PATH_STACK_PROGRAMS := $(shell cd src && stack path --programs 2>/dev/null)
 BIN := jwtfuzz-exe
 BUILD_CONTAINER := ${BIN}-builder
+EXE_CONTAINER := jwtfuzz
 
 ifeq ($(OS),Windows_NT)
-    # CCFLAGS += -D WIN32
 		# 2022-10-12: Not currently supported
+		# CCFLAGS += -D WIN32
 else
-    UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S),Linux)
-        #CCFLAGS += -D LINUX
+		UNAME_S := $(shell uname -s)
+		ifeq ($(UNAME_S),Linux)
+				#CCFLAGS += -D LINUX
 				PATH_LIBHS_JWTFUZZ := ${BIN_PATH_ABS}/build/libHSjwtfuzz.so
 				PATH_LIB_JWTFUZZ := ${BIN_PATH_ABS}/build/jwtfuzz/libjwtfuzz.so
 				LIB_PRELOAD := LD_PRELOAD="${PATH_LIB_JWTFUZZ} ${PATH_LIBHS_JWTFUZZ}"
-    endif
-    ifeq ($(UNAME_S),Darwin)
-        #CCFLAGS += -D OSX
+		endif
+		ifeq ($(UNAME_S),Darwin)
+				#CCFLAGS += -D OSX
 				PATH_LIBHS_JWTFUZZ := ${BIN_PATH_ABS}/build/libHSjwtfuzz.dylib
 				PATH_LIB_JWTFUZZ := ${BIN_PATH_ABS}/build/jwtfuzz/libjwtfuzz.dylib
 				LIB_PRELOAD := DYLD_INSERT_LIBRARIES="${PATH_LIB_JWTFUZZ}:${PATH_LIBHS_JWTFUZZ}"
-    endif
+		endif
 endif
 
 PATH_GHC_INCLUDES := ${PATH_STACK_PROGRAMS}/ghc-tinfo6-9.0.2/lib/ghc-9.0.2/include
@@ -76,13 +77,16 @@ so: FORCE
 	cd so/test && \
 		 ${LIB_PRELOAD} ./test
 
-docker-build-container:
-	sudo docker build -t ${BUILD_CONTAINER} -f docker/Dockerfile-build .
+docker-image: docker-build-image
+	sudo docker build -t "${EXE_CONTAINER}" -t "cortisol/jwtfuzz:latest" -f ./docker/Dockerfile .
 
-docker-build: docker-build-container
+docker-build-image:
+	sudo docker build -t ${BUILD_CONTAINER} -f ./docker/Dockerfile-build .
+
+docker-build: docker-build-image
 	sudo docker run -it -v $$(pwd):/app ${BUILD_CONTAINER} bash -c 'cd /app/; make bin'
 
-docker-build-watch: docker-build-container
+docker-build-watch: docker-build-image
 	sudo docker run -it -v $$(pwd):/app ${BUILD_CONTAINER} bash -c 'cd /app/; make watch'
 
 go:
