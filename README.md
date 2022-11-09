@@ -14,6 +14,14 @@ eyJhbGciOiJOT05FIiwidHlwIjoiSldUIn0.eyJpYXQiOjE1MTYyMzkwMjIsIm5hbWUiOiJKb2huIERv
 ...ommitted...
 ```
 
+## Using as a Binary via Docker
+
+The binary is distributed as a docker container hosted on DockerHub.
+
+```
+echo "eyJhbGciOiJIUzI1NiI...<ommitted>" | docker run -i cortisol/jwtfuzz 
+```
+
 ## Using as a Library
 
 The fuzzing functions are also provided as a Unix Shared Library (.so) and Windows DLL.

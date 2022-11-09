@@ -1,5 +1,12 @@
 FROM debian:9
 
-RUN apt-get update && apt-get install -y curl make gcc-multilib libc-dev build-essential libtinfo-dev
+# Copy a corporate proxy root certificate to the container
+COPY corporate-proxy-root.pem /etc/ssl/certs/corporate-proxy-root.pem
+RUN cat /etc/ssl/certs/corporate-proxy-root.pem >> /etc/ssl/certs/ca-certificates.crt
+
+# Install prerequisites
+RUN apt-get update \
+  && apt-get install -y \
+  curl make gcc-multilib libc-dev build-essential libtinfo-dev
 RUN curl -sSkL https://get.haskellstack.org/ | sh
 

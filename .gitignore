@@ -25,3 +25,5 @@ so/test/test
 bin/jwtfuzz-exe
 *.swp
 *.swo
+go/main
+corporate-proxy-root.pem
