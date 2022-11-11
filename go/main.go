@@ -1,32 +1,13 @@
 package main
 
-//  -I ${PATH_STACK}/c \
-//  -I ${PATH_GHC_INCLUDES} \
-//  -I ${BIN_PATH_ABS}/build \
-//  -L${BIN_PATH_ABS}/build/jwtfuzz \
-//  -L${BIN_PATH_ABS}/build \
-//  -ljwtfuzz \
-//  -lHSjwtfuzz \
-//  -Wl,-rpath,'$$ORIGIN' \
-
-// TODO: Install dylibs to /usr/lib/libjwtfuzz.dylib'
-// TODO: Install 
-
-// TMP run:
-// CGO_LDFLAGS="-L/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build -L/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build/jwtfuzz -ljwtfuzz -lHSjwtfuzz" CGO_CXXFLAGS="-rpath=." 
-// DYLD_LIBRARY_PATH="/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build:/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build/jwtfuzz" ./main
-
 /*
 #cgo CFLAGS: -g -Wall
-#cgo CFLAGS: -I /Users/brownj17/dev/jwtfuzz/src/c
-#cgo LDFLAGS: -L/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build
-#cgo LDFLAGS: -L/Users/brownj17/dev/jwtfuzz/src/.stack-work/dist/x86_64-osx/Cabal-3.4.1.0/build/jwtfuzz
 #cgo LDFLAGS: -ljwtfuzz
 #cgo LDFLAGS: -lHSjwtfuzz
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <jwtfuzz/src/c/jwtfuzz.h>
+#include <jwtfuzz/jwtfuzz.h>
 
 char** fuzzer(char** fuzz_err, char* jwt){
   char** jwts = fuzzjwt_fuzz(fuzz_err, jwt);

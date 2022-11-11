@@ -1,6 +1,7 @@
 
 HS_LIBDIR := $(shell cd src && stack ghc -- --print-libdir 2>/dev/null)
 PATH_STACK := $(shell cd src && pwd 2>/dev/null)
+PATH_STACK_INSTALL_ROOT := $(shell cd src && stack path --local-install-root 2>/dev/null)
 BIN_PATH := $(shell cd src && stack path --dist-dir --allow-different-user 2>/dev/null)
 BIN_PATH_ABS := $(shell pwd)/src/${BIN_PATH}
 PATH_STACK_PROGRAMS := $(shell cd src && stack path --programs 2>/dev/null)
@@ -76,6 +77,11 @@ so: FORCE
 	echo "Running Tests.."
 	cd so/test && \
 		 ${LIB_PRELOAD} ./test
+
+lib-install:
+	ln -s "${PATH_STACK_INSTALL_ROOT}"/lib/x86_64-osx-ghc-*/libHSjwtfuzz-*.dylib /usr/local/lib/libHSjwtfuzz.dylib
+	ln -s "${PATH_STACK_INSTALL_ROOT}"/lib/libjwtfuzz.dylib /usr/local/lib/libjwtfuzz.dylib
+	ln -s "${PATH_STACK}/src/c/" /usr/local/include/jwtfuzz
 
 docker-image: docker-build-image
 	sudo docker build -t "${EXE_CONTAINER}" -t "cortisol/jwtfuzz:latest" -f ./docker/Dockerfile .

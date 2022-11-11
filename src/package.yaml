@@ -62,22 +62,22 @@ executables:
     dependencies:
     - jwtfuzz
 
-foreign-library:
-  type: native-shared
-  other-modules:
-      Paths_jwtfuzz
-  source-dirs:
-      src
-  ghc-options: -dynamic -shared -fPIC -L/usr/lib/ghc-9.0.2/rts -lHSrts-ghc9.0.2
-  cc-options: -static
-  c-sources:
-      ./c/entry.c
-  dependencies:
-    - jwtfuzz
+      # foreign-library:
+      #   type: native-shared
+      #   other-modules:
+      #       Paths_jwtfuzz
+      #   source-dirs:
+      #       src
+      #   ghc-options: -dynamic -shared -fPIC -L/usr/lib/ghc-9.0.2/rts -lHSrts-ghc9.0.2
+      #   cc-options: -static
+      #   c-sources:
+      #       ./c/entry.c
+      #   dependencies:
+      #     - jwtfuzz
 
 foreign-libraries:
-  jwtfuzz.so:
-    main:                Main.hs
+  jwtfuzz:
+    type: native-shared
     source-dirs:         app
     ghc-options:
       # - -threaded
@@ -88,10 +88,9 @@ foreign-libraries:
     - -dynamic
     - -shared
     - -fPIC
-      #- -o libjwtfuzz.so
-    - -L/usr/lib/ghc-9.0.2/rts
-    - -lHSrts-ghc9.0.2
-    c-sources: ./../so/entry.c
+      # - -L/usr/lib/ghc-9.0.2/rts
+      # - -lHSrts-ghc9.0.2
+    c-sources: ./c/jwtfuzz.c
     cc-options:
     - -static
       #ld-options: -static -pthread
