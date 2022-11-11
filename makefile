@@ -79,9 +79,15 @@ so: FORCE
 		 ${LIB_PRELOAD} ./test
 
 lib-install:
-	ln -s "${PATH_STACK_INSTALL_ROOT}"/lib/x86_64-osx-ghc-*/libHSjwtfuzz-*.dylib /usr/local/lib/libHSjwtfuzz.dylib
-	ln -s "${PATH_STACK_INSTALL_ROOT}"/lib/libjwtfuzz.dylib /usr/local/lib/libjwtfuzz.dylib
-	ln -s "${PATH_STACK}/src/c/" /usr/local/include/jwtfuzz
+	@if [ $(UNAME_S) = "Linux" ]; then \
+		# TODO
+		# ln -s ${BIN_PATH_ABS}/build/libHSjwtfuzz-*.so ${PATH_LIBHS_JWTFUZZ};
+	fi
+	@if [ $(UNAME_S) = "Darwin" ]; then \
+		ln -s "${PATH_STACK_INSTALL_ROOT}"/lib/x86_64-osx-ghc-*/libHSjwtfuzz-*.dylib /usr/local/lib/libHSjwtfuzz.dylib
+		ln -s "${PATH_STACK_INSTALL_ROOT}"/lib/libjwtfuzz.dylib /usr/local/lib/libjwtfuzz.dylib
+		ln -s "${PATH_STACK}/src/c/" /usr/local/include/jwtfuzz
+	fi
 
 docker-image: docker-build-image
 	sudo docker build -t "${EXE_CONTAINER}" -t "cortisol/jwtfuzz:latest" -f ./docker/Dockerfile .
